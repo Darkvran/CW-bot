@@ -8,13 +8,14 @@ from random import uniform
 
 class BotDriver:
 
-    def __init__(self, char_id, char_login, char_password, is_headless=True, user_agent='', proxy=''):
+    def __init__(self, char_id, char_login, char_password, is_headless, user_agent='', proxy=''):
         self.char_id = char_id
         self.char_login = char_login
         self.char_password = char_password
         self.is_headless = is_headless
         self.user_agent = user_agent
         self.proxy = proxy
+        print('Headless:', type(is_headless), is_headless)
 
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("--disable-blink-features=AutomationControlled")
@@ -69,11 +70,12 @@ class BotDriver:
         self.test_mouse()
         self.safety_check()
         while True:
-            print('Добро пожаловать на персонажа с ID ' + self.charID)
+            print(f'Добро пожаловать на персонажа с ID {self.char_id}')
             print('0 - Вернуться в главное меню')
             print('1 - Перепроверка безопасности.')
             answer = input('Выберите действие:')
             if answer == '0':
+                self.driver.quit()
                 break
             elif answer == '1':
                 self.test_mouse()
@@ -86,28 +88,23 @@ class BotDriver:
 
             if self.check_element_existance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.driver.execute_script("return navigator.userAgent;"):
                 print('UserAgent валиден.')
-                self.driver.quit()
+                print(f'UserAgent:{self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text}')
 
         else:
             print("Webdriver не скрыт. Аварийное завершение работы программы.")
             self.driver.quit()
 
     def __getstate__(self) -> dict:  # Как мы будем "сохранять" класс
-        state = {}
-        state["charID"] = self.char_id
-        state["charLogin"] = self.char_login
-        state["charPassword"] = self.char_password
-        state["isHeadless"] = self.is_headless
-        state["userAgent"] = self.user_agent
-        state["proxy"] = self.proxy
+        state = {"char_id": self.char_id, "char_login": self.char_login, "char_password": self.char_password,
+                 "is_headless": self.is_headless, "user_agent": self.user_agent, "proxy": self.proxy}
         return state
 
     def __setstate__(self, state: dict):  # Как мы будем восстанавливать класс из байтов
-        self.charID = state["charID"]
-        self.charLogin = state["charLogin"]
-        self.charPassword = state["charPassword"]
-        self.isHeadless = state["isHeadless"]
-        self.userAgent = state["userAgent"]
+        self.char_id = state["char_id"]
+        self.char_login = state["char_login"]
+        self.char_password = state["char_password"]
+        self.is_headless = state["is_headless"]
+        self.user_agent = state["user_agent"]
         self.proxy = state["proxy"]
 
 

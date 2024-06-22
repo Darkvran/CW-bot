@@ -6,59 +6,57 @@ from time import sleep
 from random import uniform
 
 
-class botDriver():
+class BotDriver:
 
-    def __init__ (self, charID, charLogin, charPassword, isHeadless=True, userAgent='', proxy=''):
-        self.charID = charID
-        self.charLogin = charLogin
-        self.charPassword = charPassword
-        self.isHeadless = isHeadless
-        self.userAgent = userAgent
+    def __init__(self, char_id, char_login, char_password, is_headless=True, user_agent='', proxy=''):
+        self.char_id = char_id
+        self.char_login = char_login
+        self.char_password = char_password
+        self.is_headless = is_headless
+        self.user_agent = user_agent
         self.proxy = proxy
-
 
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("--disable-blink-features=AutomationControlled")
         self.options.add_experimental_option('detach', True)
 
-        if (isHeadless):
+        if is_headless:
             self.options.add_argument("--headless")
 
-        if (userAgent != ''):
-            self.options.add_argument("user-agent="+userAgent)
+        if user_agent != '':
+            self.options.add_argument(f"user-agent={self.user_agent}")
 
-        if (proxy != ''):
+        if proxy != '':
             self.options.add_argument(f'--proxy-server={proxy}')
 
         self.driver = webdriver.Chrome(options=self.options)
         print(type(self.options.arguments), self.options.arguments)
         self.action = ActionChains(self.driver)
 
-
-    def checkElementExistance(self, element):
+    def check_element_existance(self, element):
         try:
             self.driver.find_element(By.XPATH, element)
         except NoSuchElementException:
             return False
         return True
-    def elementClick(self, element):
-        if self.checkElementExistance(element):
+
+    def element_click(self, element):
+        if self.check_element_existance(element):
             el = self.driver.find_element(By.XPATH, element)
-            offX = uniform(-(el.size['width']/2), el.size['width']/2)
-            offY = uniform(-(el.size['height']/2), el.size['height']/2)
-            self.action.move_to_element_with_offset(el, offX, offY).click().perform()
+            off_x = uniform(-(el.size['width']/2), el.size['width']/2)
+            off_y = uniform(-(el.size['height']/2), el.size['height']/2)
+            self.action.move_to_element_with_offset(el, int(off_x), int(off_y)).click().perform()
 
-
-    def testMouse(self):
+    def test_mouse(self):
         self.driver.get('https://keengo.ru/blog/javascript/opredelenie-koordinat-kursora-myshi/')
         sleep(3)
-        self.elementClick('/html/body/div[2]/div[1]/div[1]/div/h1')
-        cords1 = self.driver.find_element(By.XPATH,'// *[ @ id = "coords1"]')
+        self.element_click('/html/body/div[2]/div[1]/div[1]/div/h1')
+        cords1 = self.driver.find_element(By.XPATH, '// *[ @ id = "coords1"]')
         print(cords1.text)
         self.driver.refresh()
         sleep(3)
-        self.elementClick('/html/body/div[2]/div[1]/div[1]/div/h1')
-        cords2 = self.driver.find_element(By.XPATH,'// *[ @ id = "coords1"]')
+        self.element_click('/html/body/div[2]/div[1]/div[1]/div/h1')
+        cords2 = self.driver.find_element(By.XPATH, '// *[ @ id = "coords1"]')
         print(cords2.text)
         if cords1 == cords2:
             print("Оффсет не работает. Аварийное завершение работы программы.")
@@ -67,26 +65,26 @@ class botDriver():
         else:
             print("Оффсет работает!")
 
-
-    def botDriverMenu(self):
-        self.testMouse()
-        self.safetyCheck()
+    def botdriver_menu(self):
+        self.test_mouse()
+        self.safety_check()
         while True:
-            print('Добро пожаловать на персонажа с ID '+ self.charID)
+            print('Добро пожаловать на персонажа с ID ' + self.charID)
             print('0 - Вернуться в главное меню')
             print('1 - Перепроверка безопасности.')
             answer = input('Выберите действие:')
             if answer == '0':
                 break
             elif answer == '1':
-                self.testMouse()
-                self.safetyCheck()
-    def safetyCheck(self):
+                self.test_mouse()
+                self.safety_check()
+
+    def safety_check(self):
         self.driver.get('https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html')
-        if self.checkElementExistance("//*[@id='webdriver-result']") and self.driver.find_element(By.XPATH, "//*[@id='webdriver-result']").text == 'missing (passed)':
+        if self.check_element_existance("//*[@id='webdriver-result']") and self.driver.find_element(By.XPATH, "//*[@id='webdriver-result']").text == 'missing (passed)':
             print("Webdriver скрыт.")
 
-            if self.checkElementExistance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.driver.execute_script("return navigator.userAgent;"):
+            if self.check_element_existance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.driver.execute_script("return navigator.userAgent;"):
                 print('UserAgent валиден.')
                 self.driver.quit()
 
@@ -96,11 +94,11 @@ class botDriver():
 
     def __getstate__(self) -> dict:  # Как мы будем "сохранять" класс
         state = {}
-        state["charID"] = self.charID
-        state["charLogin"] = self.charLogin
-        state["charPassword"] = self.charPassword
-        state["isHeadless"] = self.isHeadless
-        state["userAgent"] = self.userAgent
+        state["charID"] = self.char_id
+        state["charLogin"] = self.char_login
+        state["charPassword"] = self.char_password
+        state["isHeadless"] = self.is_headless
+        state["userAgent"] = self.user_agent
         state["proxy"] = self.proxy
         return state
 

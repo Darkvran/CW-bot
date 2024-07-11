@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ded1e22-7b57-4acb-930f-37c585d3f699" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/botdriver.py" beforeDir="false" afterPath="$PROJECT_DIR$/botdriver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/profile_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/profile_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cookies/395928_cookie" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/profiles.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/profiles.pkl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +42,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/vladi/PycharmProjects/CWbot"
+    "last_opened_file_path": "C:/Users/vladi/PycharmProjects/CatwarBot_2"
   }
 }]]></component>
   <component name="RecentsManager">

@@ -1,7 +1,7 @@
-from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
+from seleniumwire import webdriver
 from time import sleep
 from random import uniform
 from os import path
@@ -30,11 +30,19 @@ class BotDriver:
             self.options.add_argument(f"user-agent={self.user_agent}")
 
         if proxy != '':
-            self.options.add_argument(f'--proxy-server={proxy}')
+            proxy_url = f"http://{self.proxy}"
+            selenium_wire_options = {
+                "proxy": {
+                    "http": proxy_url,
+                    "https": proxy_url
+                },
+            }
+            self.driver = webdriver.Chrome(options=self.options, seleniumwire_options=selenium_wire_options)
+            self.action = ActionChains(self.driver)
 
-        self.driver = webdriver.Chrome(options=self.options)
-        print(type(self.options.arguments), self.options.arguments)
-        self.action = ActionChains(self.driver)
+        else:
+            self.driver = webdriver.Chrome(options=self.options)
+            self.action = ActionChains(self.driver)
 
     def check_element_existance(self, element):
         try:
@@ -94,6 +102,10 @@ class BotDriver:
             if self.check_element_existance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.driver.execute_script("return navigator.userAgent;"):
                 print('UserAgent валиден.')
                 print(f'UserAgent:{self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text}')
+                self.driver.get('https://www.whatismybrowser.com/')
+                sleep(3)
+                ip = self.driver.find_element(By.XPATH, "//*[@id='ip-address']/div[2]").text
+                print("IP:" + ip)
 
         else:
             print("Webdriver не скрыт. Аварийное завершение работы программы.")
@@ -102,18 +114,18 @@ class BotDriver:
     def cw_auto(self):
         print("Проверка cookie...")
         cookie_exist = path.exists(f"cookies/{self.char_id}_cookie")
+        self.driver.get('https://catwar.su/login')
         if cookie_exist:
             print("Обнаружен файл cookie. Начинаем загрузку...")
             for cookie in load(open(f"cookies/{self.char_id}_cookie", "rb")):
                 self.driver.add_cookie(cookie)
             sleep(3)
-            self.driver.get('https://catwar.su/login')
+            self.driver.get('https://catwar.su')
             sleep(3)
             if self.check_element_existance('//*[@id="emblem"]'):
                 print("Cookie успешно загружены. Вход завершен.")
 
         else:
-            self.driver.get('https://catwar.su/login')
             print("Cookie не обнаружены. Выполняется аутентификация.")
             sleep(3)
             login = self.char_login

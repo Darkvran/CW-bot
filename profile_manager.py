@@ -29,7 +29,7 @@ class ProfileManager:
         cat_proxy = input("Введите адрес прокси сервера при необходимости. В противном случае - просто нажмите Enter.")
 
         cat_profile = {
-                    'сat_name': cat_name,
+                    'cat_name': cat_name,
                     'cat_id': cat_id,
                     'cat_login': cat_login,
                     'cat_password': cat_password,
@@ -47,7 +47,8 @@ class ProfileManager:
                 self.profiles.pop(i)
                 print(f"Профиль {name} успешно удалён")
                 self.save_profiles()
-                return
+                return 0
+
         print("Данного профиля не существует")
 
     def start_profile(self):
@@ -55,7 +56,7 @@ class ProfileManager:
             print("Выберите профиль для запуска.")
             print("x - вернуться в главное меню")
             for i, profile in enumerate(self.profiles):
-                print(f"{i} - {profile}")
+                print(f"{i} - {profile['cat_name']}")
             answer = input("Выберите пункт: ")
             if answer.lower() == 'x':
                 break

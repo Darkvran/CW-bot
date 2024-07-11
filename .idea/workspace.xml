@@ -7,7 +7,6 @@
     <list default="true" id="6ded1e22-7b57-4acb-930f-37c585d3f699" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/botdriver.py" beforeDir="false" afterPath="$PROJECT_DIR$/botdriver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/profile_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/profile_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/profiles.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/profiles.pkl" afterDir="false" />
     </list>
@@ -69,6 +68,15 @@
     <servers />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.profiles[0]" />

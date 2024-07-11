@@ -4,6 +4,8 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from time import sleep
 from random import uniform
+from os import path
+from pickle import dump, load
 
 
 class BotDriver:
@@ -73,6 +75,7 @@ class BotDriver:
             print(f'Добро пожаловать на персонажа с ID {self.char_id}')
             print('0 - Вернуться в главное меню')
             print('1 - Перепроверка безопасности.')
+            print('2 - Авторизация.')
             answer = input('Выберите действие:')
             if answer == '0':
                 self.driver.quit()
@@ -80,6 +83,8 @@ class BotDriver:
             elif answer == '1':
                 self.test_mouse()
                 self.safety_check()
+            elif answer == '2':
+                self.cw_auto()
 
     def safety_check(self):
         self.driver.get('https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html')
@@ -94,6 +99,39 @@ class BotDriver:
             print("Webdriver не скрыт. Аварийное завершение работы программы.")
             self.driver.quit()
 
+    def cw_auto(self):
+        print("Проверка cookie...")
+        cookie_exist = path.exists(f"cookies/{self.char_id}_cookie")
+        if cookie_exist:
+            print("Обнаружен файл cookie. Начинаем загрузку...")
+            for cookie in load(open(f"cookies/{self.char_id}_cookie", "rb")):
+                self.driver.add_cookie(cookie)
+            sleep(3)
+            self.driver.get('https://catwar.su/login')
+            sleep(3)
+            if self.check_element_existance('//*[@id="emblem"]'):
+                print("Cookie успешно загружены. Вход завершен.")
+
+        else:
+            self.driver.get('https://catwar.su/login')
+            print("Cookie не обнаружены. Выполняется аутентификация.")
+            sleep(3)
+            login = self.char_login
+            password = self.char_password
+
+            mail_input = self.driver.find_element(By.ID, 'mail')
+            mail_input.send_keys(login)
+
+            password_input = self.driver.find_element(By.ID, 'pass')
+            password_input.send_keys(password)
+
+            self.element_click('//*[@id="form"]/input[2]')
+            sleep(3)
+            if self.check_element_existance('//*[@id="emblem"]'):
+                print("Авторизация завершена. Сохраняем куки.")
+                dump(self.driver.get_cookies(), open(f"cookies/{self.char_id}_cookie", "wb"))
+        sleep(3)
+
     def __getstate__(self) -> dict:  # Как мы будем "сохранять" класс
         state = {"char_id": self.char_id, "char_login": self.char_login, "char_password": self.char_password,
                  "is_headless": self.is_headless, "user_agent": self.user_agent, "proxy": self.proxy}
@@ -106,6 +144,3 @@ class BotDriver:
         self.is_headless = state["is_headless"]
         self.user_agent = state["user_agent"]
         self.proxy = state["proxy"]
-
-
-

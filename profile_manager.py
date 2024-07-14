@@ -33,7 +33,7 @@ class ProfileManager:
                 index = int(answer)
                 if 0 <= index < len(self.profiles):
                     profile = self.profiles[index]
-                    print("Что вы хотите отредактировать?\n 1 - Имя\n2 - ID\n 3 - Почту\n4 - Пароль\n5 - Headless\n6 - Usea agent\n7 - Proxy\n0 - Отмена")
+                    print("Что вы хотите отредактировать?\n 1 - Имя\n2 - ID\n 3 - Почту\n4 - Пароль\n5 - Headless\n6 - User agent\n7 - Proxy\n0 - Отмена")
 
                     cmd = input("Выберите пункт: ")
                     system('cls' if name == 'nt' else 'clear')
@@ -130,7 +130,7 @@ class ProfileManager:
                 if 0 <= index < len(self.profiles):
                     profile = self.profiles[index]
                     bot = BotDriver(profile['cat_id'], profile['cat_login'], profile['cat_password'], profile['cat_is_headless'], profile['cat_user_agent'], profile['cat_proxy'])
-                    bot.botdriver_profile_initiate()
+                    bot.profile_initiate()
 
                 else:
                     print("Не существующая команда")

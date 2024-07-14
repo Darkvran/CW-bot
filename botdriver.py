@@ -1,6 +1,5 @@
 from selenium.webdriver import ActionChains
 from selenium.common import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from seleniumwire import webdriver
 from time import sleep
@@ -60,16 +59,16 @@ class BotDriver:
             off_y = uniform(-(el.size['height']/2), el.size['height']/2)
             self.action.move_to_element_with_offset(el, int(off_x), int(off_y)).click().perform()
 
-    def botdriver_profile_initiate(self):
+
+    def profile_initiate(self):
         self.safety_check()
 
         self.cw_auto()
 
         game_interface = GameInterface(self)
-        print(game_interface.get_my_profile())
+        game_interface.gain_activity()
 
         self.driver.quit()
-
 
     def safety_check(self):
         self.driver.get('https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html')
@@ -79,18 +78,23 @@ class BotDriver:
             if self.check_element_existance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.user_agent:
                 print('UserAgent валиден.')
                 print(f'UserAgent:{self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text}')
-                self.driver.get('https://whatismyipaddress.com/ru/index')
+                self.driver.get('https://2ip.ru/')
 
                 sleep(3)
 
-                ip = self.driver.find_element(By.XPATH, "//*[@id='ipv4']/a").text
+                ip = self.driver.find_element(By.XPATH, "//*[@id='d_clip_button']/span").text
                 print("IP:" + ip)
                 if self.proxy != '' and ip not in self.proxy:
                     print('Прокси не скрыл айпи. Принудительный выход.')
                     self.driver.quit()
 
+            else:
+                print("Не валидный UserAgent. Принудительный выход.")
+                self.driver.quit()
+
+
         else:
-            print("Webdriver не скрыт. Аварийное завершение работы программы.")
+            print("Webdriver не скрыт. Принудительный выход.")
             self.driver.quit()
 
     def cw_auto(self):

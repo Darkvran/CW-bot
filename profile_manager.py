@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from botdriver import BotDriver
 from os import path, stat
 from pickle import load, dump

@@ -37,6 +37,8 @@ class BotDriver:
                     "http": proxy_url,
                     "https": proxy_url
                 },
+                'backend': 'mitmproxy',
+                'ignore_http_methods': ['CONNECT']
             }
             self.driver = webdriver.Chrome(options=self.options, seleniumwire_options=selenium_wire_options)
             self.action = ActionChains(self.driver)

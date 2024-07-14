@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from profile_manager import ProfileManager
 from os import system, name
 

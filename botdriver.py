@@ -1,11 +1,13 @@
 from selenium.webdriver import ActionChains
 from selenium.common import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from seleniumwire import webdriver
 from time import sleep
 from random import uniform
 from os import path
 from pickle import dump, load
+from game import GameInterface
 
 
 class BotDriver:
@@ -58,54 +60,34 @@ class BotDriver:
             off_y = uniform(-(el.size['height']/2), el.size['height']/2)
             self.action.move_to_element_with_offset(el, int(off_x), int(off_y)).click().perform()
 
-    def test_mouse(self):
-        self.driver.get('https://keengo.ru/blog/javascript/opredelenie-koordinat-kursora-myshi/')
-        sleep(3)
-        self.element_click('/html/body/div[2]/div[1]/div[1]/div/h1')
-        cords1 = self.driver.find_element(By.XPATH, '// *[ @ id = "coords1"]')
-        print(cords1.text)
-        self.driver.refresh()
-        sleep(3)
-        self.element_click('/html/body/div[2]/div[1]/div[1]/div/h1')
-        cords2 = self.driver.find_element(By.XPATH, '// *[ @ id = "coords1"]')
-        print(cords2.text)
-        if cords1 == cords2:
-            print("Оффсет не работает. Аварийное завершение работы программы.")
-            self.driver.quit()
-
-        else:
-            print("Оффсет работает!")
-
-    def botdriver_menu(self):
-        self.test_mouse()
+    def botdriver_profile_initiate(self):
         self.safety_check()
-        while True:
-            print(f'Добро пожаловать на персонажа с ID {self.char_id}')
-            print('0 - Вернуться в главное меню')
-            print('1 - Перепроверка безопасности.')
-            print('2 - Авторизация.')
-            answer = input('Выберите действие:')
-            if answer == '0':
-                self.driver.quit()
-                break
-            elif answer == '1':
-                self.test_mouse()
-                self.safety_check()
-            elif answer == '2':
-                self.cw_auto()
+
+        self.cw_auto()
+
+        game_interface = GameInterface(self)
+        print(game_interface.get_my_profile())
+
+        self.driver.quit()
+
 
     def safety_check(self):
         self.driver.get('https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html')
         if self.check_element_existance("//*[@id='webdriver-result']") and self.driver.find_element(By.XPATH, "//*[@id='webdriver-result']").text == 'missing (passed)':
             print("Webdriver скрыт.")
 
-            if self.check_element_existance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.driver.execute_script("return navigator.userAgent;"):
+            if self.check_element_existance("//*[@id='user-agent-result']") and self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text == self.user_agent:
                 print('UserAgent валиден.')
                 print(f'UserAgent:{self.driver.find_element(By.XPATH, "//*[@id='user-agent-result']").text}')
-                self.driver.get('https://www.whatismybrowser.com/')
+                self.driver.get('https://whatismyipaddress.com/ru/index')
+
                 sleep(3)
-                ip = self.driver.find_element(By.XPATH, "//*[@id='ip-address']/div[2]").text
+
+                ip = self.driver.find_element(By.XPATH, "//*[@id='ipv4']/a").text
                 print("IP:" + ip)
+                if self.proxy != '' and ip not in self.proxy:
+                    print('Прокси не скрыл айпи. Принудительный выход.')
+                    self.driver.quit()
 
         else:
             print("Webdriver не скрыт. Аварийное завершение работы программы.")

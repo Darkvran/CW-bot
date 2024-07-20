@@ -115,3 +115,27 @@ class GameInterface:
             self.exception_leaving()
         except StaleElementReferenceException:
             self.exception_leaving()
+
+def get_my_available_actions(self):
+    try:
+        if self.bot_driver.driver.current_url != game_page:
+            self.bot_driver.driver.get(game_page)
+            sleep(3)
+        sleep(3)
+        actions_list = []
+        k = 1
+        while self.bot_driver.check_element_existance(f'//*[@id="akten"]/a[{k}]'):
+            checking_action = self.bot_driver.driver.find_element(By.XPATH, f'//*[@id="akten"]/a[{k}]')
+            if checking_action.get_attribute('style') != 'display: none;':
+                actions_list.append(checking_action)
+            k = k + 1
+        return actions_list
+
+    except NoSuchElementException:
+        self.exception_leaving('get_my_available_actions')
+    except IndexError:
+        self.exception_leaving('get_my_available_actions')
+    except ElementNotInteractableException:
+        self.exception_leaving('get_my_available_actions')
+    except StaleElementReferenceException:
+        self.exception_leaving('get_my_available_actions')
